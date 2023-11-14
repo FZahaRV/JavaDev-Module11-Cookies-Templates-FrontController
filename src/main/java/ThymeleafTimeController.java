@@ -29,13 +29,11 @@ public class ThymeleafTimeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws SecurityException {
         resp.setContentType("text/html");
-        String timezone = req.getParameter("timezone");
+        String param = "timezone";
+        String timezone = req.getParameter(param);
         if(timezone != null) {
-            if(timezone.length() > 3) {
-                resp.addCookie(new Cookie("timezone", !Character.isDigit(timezone.charAt(3)) ? timezone.replace(timezone.charAt(3), '+') : timezone.replace(timezone.substring(4), "+" + timezone.substring(4))));
-            }else{
-                resp.addCookie(new Cookie("timezone", timezone));
-            }
+            timezone = "UTC+" + timezone.replaceAll("[^0-9]", "");
+            resp.addCookie(new Cookie(param, timezone));
         }else if(req.getCookies() != null){
             Cookie[] cookies = req.getCookies();
             timezone = cookies[cookies.length-1].getValue();
