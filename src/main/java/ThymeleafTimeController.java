@@ -19,7 +19,7 @@ public class ThymeleafTimeController extends HttpServlet {
     public void init() throws SecurityException {
         engine = new TemplateEngine();
         FileTemplateResolver resolver = new FileTemplateResolver();
-        resolver.setPrefix("./templates/");
+        resolver.setPrefix("templates/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML5");
         resolver.setOrder(engine.getTemplateResolvers().size());
@@ -31,17 +31,16 @@ public class ThymeleafTimeController extends HttpServlet {
         resp.setContentType("text/html");
         String timezone = req.getParameter("timezone");
         if(timezone != null) {
-            resp.addCookie(new Cookie("timezone", timezone.replace(" ", "+")));
-        }
-        if(timezone == null) {
-            if(req.getCookies() != null) {
-                Cookie[] cookies = req.getCookies();
-                for(Cookie cookie : cookies) {
-                    timezone = cookie.getValue();
-                }
+            if(timezone.length() > 3) {
+                resp.addCookie(new Cookie("timezone", !Character.isDigit(timezone.charAt(3)) ? timezone.replace(timezone.charAt(3), '+') : timezone.replace(timezone.substring(4), "+" + timezone.substring(4))));
             }else{
-                timezone = "UTC";
+                resp.addCookie(new Cookie("timezone", timezone));
             }
+        }else if(req.getCookies() != null){
+            Cookie[] cookies = req.getCookies();
+            timezone = cookies[cookies.length-1].getValue();
+        }else{
+            timezone = "UTC";
         }
         String[] parts;
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
