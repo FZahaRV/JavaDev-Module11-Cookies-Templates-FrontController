@@ -32,7 +32,7 @@ public class ThymeleafTimeController extends HttpServlet {
         String param = "timezone";
         String timezone = req.getParameter(param);
         if(timezone != null) {
-            timezone = "UTC+" + timezone.replaceAll("[^0-9]", "");
+            timezone = timezone.replaceAll("[^0-9]", "");
             resp.addCookie(new Cookie(param, timezone));
         }else if(req.getCookies() != null){
             Cookie[] cookies = req.getCookies();
@@ -45,10 +45,9 @@ public class ThymeleafTimeController extends HttpServlet {
         Calendar calendar = Calendar.getInstance(timeZone);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
         dateFormat.setTimeZone(calendar.getTimeZone());
-        if(timezone.length() > 4 && timezone.startsWith("UTC") && Character.isDigit(timezone.charAt(4))) {
-            parts = timezone.toUpperCase().split("\\s+|\\+");
-            calendar.add(Calendar.HOUR, Integer.parseInt(parts[1]));
-            timezone = dateFormat.format(calendar.getTime()) + "UTC+" + parts[1];
+        if(!timezone.isEmpty()) {
+            calendar.add(Calendar.HOUR, Integer.parseInt(timezone));
+            timezone = dateFormat.format(calendar.getTime()) + "UTC+" + timezone;
         }else{
             timezone = dateFormat.format(calendar.getTime()) + "UTC";
         }
