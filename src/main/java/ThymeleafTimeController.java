@@ -40,7 +40,6 @@ public class ThymeleafTimeController extends HttpServlet {
         }else{
             timezone = "UTC";
         }
-        String[] parts;
         TimeZone timeZone = TimeZone.getTimeZone("GMT");
         Calendar calendar = Calendar.getInstance(timeZone);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ");
