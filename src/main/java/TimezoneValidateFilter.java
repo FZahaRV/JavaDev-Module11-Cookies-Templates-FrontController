@@ -13,7 +13,7 @@ public class TimezoneValidateFilter extends HttpFilter {
         String timezone = req.getParameter("timezone");
         if(timezone == null) {
             chain.doFilter(req,resp);
-        } else if(timezone.startsWith("UTC")) {
+        } else if(timezone.equals("UTC") || (timezone.startsWith("UTC") && timezone.length() > 4 && Integer.parseInt(timezone.replaceAll("[^0-9]", "")) < 24)) {
             chain.doFilter(req,resp);
         } else {
             resp.setStatus(400);
